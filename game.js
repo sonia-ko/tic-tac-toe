@@ -79,10 +79,10 @@ export function onDrag(e) {
   if (dragging.isDragged) {
     dragging.positionOfMouse.x = e.clientX;
     dragging.positionOfMouse.y = e.clientY;
-    e.target.classList.add("image-dragged");
-    e.target.style.left =
+    dragging.targetEl.classList.add("image-dragged");
+    dragging.targetEl.style.left =
       dragging.positionOfMouse.x + dragging.offset.left + "px";
-    e.target.style.top =
+    dragging.targetEl.style.top =
       dragging.positionOfMouse.y + dragging.offset.top + "px";
   }
 }

@@ -15,11 +15,9 @@ document.addEventListener("keydown", function (e) {
 
 // Game functionality
 
-Game.xImg.addEventListener("mousedown", Game.dragStart, true);
-Game.oImg.addEventListener("mousedown", Game.dragStart, true);
+document.addEventListener("mousedown", Game.dragStart, true);
 
-Game.xImg.addEventListener("mouseup", Game.dragEnd, true);
-Game.oImg.addEventListener("mouseup", Game.dragEnd, true);
+document.addEventListener("mouseup", Game.dragEnd, true);
 
 document.addEventListener("mousemove", Game.onDrag, true);
 
