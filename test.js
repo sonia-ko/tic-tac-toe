@@ -55,16 +55,6 @@ const dragging = {
 
 function gameStart() {
   img1.classList.add("hidden");
-  img0.classList.remove("hidden");
-  gameStateEl.textContent = "Please move the X sign to start the game.";
-  tableCells.forEach((el) => {
-    el.classList.remove("cell-filled");
-    el.innerHTML = "&nbsp;&nbsp;";
-  });
-  gameTable.classList.remove("game-inactive");
-  dragging.target = img0;
-  dragging.activeTarget = "X";
-  dragging.isDragged = false;
 }
 
 function dragStart(e) {
@@ -118,8 +108,8 @@ function switchSign(e) {
 
 function checkIntersection(targetEl, draggedEl) {
   if (!dragging.overlapFound) {
-    let targetElCoords = targetEl.getBoundingClientRect();
-    let draggedElCoords = draggedEl.getBoundingClientRect();
+    targetElCoords = targetEl.getBoundingClientRect();
+    draggedElCoords = draggedEl.getBoundingClientRect();
 
     let overlap = !(
       targetElCoords.right < draggedElCoords.left ||
@@ -209,7 +199,5 @@ img0.addEventListener("mouseup", dragEnd.bind(img0), true);
 img1.addEventListener("mouseup", dragEnd.bind(img1), true);
 
 document.addEventListener("mousemove", onDrag);
-
-startGameBtn.addEventListener("click", gameStart);
 
 gameStart();

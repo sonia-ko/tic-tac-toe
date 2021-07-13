@@ -1,39 +1,11 @@
-/// MODAL WINDOW FUNCTIONALITY
-
-const modal = document.querySelector(".modal");
-const overlay = document.querySelector(".overlay");
-const btnCloseModal = document.querySelector(".close-modal");
-const btnOpenModal = document.querySelector(".rules");
-
-const closeModal = function () {
-  modal.classList.add("hidden");
-  overlay.classList.add("hidden");
-};
-
-const openModal = function () {
-  modal.classList.remove("hidden");
-  overlay.classList.remove("hidden");
-};
-
-btnOpenModal.addEventListener("click", openModal);
-btnCloseModal.addEventListener("click", closeModal);
-overlay.addEventListener("click", closeModal);
-
-document.addEventListener("keydown", function (e) {
-  if (e.key === "Escape" && !modal.classList.contains("hidden")) {
-    closeModal();
-  }
-});
-
-//DOM
+export const img0 = document.querySelector(".x-image");
+export const img1 = document.querySelector(".o-image");
+export const startGameBtn = document.querySelector(".start-game-btn");
 
 const tableCells = document.querySelectorAll("td");
-const img0 = document.querySelector(".x-image");
-const img1 = document.querySelector(".o-image");
 const gameArea = document.querySelector(".game-area");
 const gameTable = document.querySelector("table");
 const gameStateEl = document.querySelector(".state-paragraph");
-const startGameBtn = document.querySelector(".start-game-btn");
 
 const dragging = {
   target: img0,
@@ -49,11 +21,11 @@ const dragging = {
   },
   overlapFound: false,
   elementSet: false,
-  leftIitial: "70%",
+  leftIitial: "70%", //initial position of the dragged element
   topImitial: "40%",
 };
 
-function gameStart() {
+export function gameStart() {
   img1.classList.add("hidden");
   img0.classList.remove("hidden");
   gameStateEl.textContent = "Please move the X sign to start the game.";
@@ -62,20 +34,20 @@ function gameStart() {
     el.innerHTML = "&nbsp;&nbsp;";
   });
   gameTable.classList.remove("game-inactive");
+  dragging.isDragged = false;
   dragging.target = img0;
   dragging.activeTarget = "X";
-  dragging.isDragged = false;
 }
 
-function dragStart(e) {
+export function dragStart(e) {
   if (dragging.isDragged) return;
   if (e.target !== dragging.target) return;
   dragging.isDragged = true;
-  dragging.offset.left = this.offsetLeft - e.clientX;
-  dragging.offset.top = this.offsetTop - e.clientY;
+  dragging.offset.left = e.target.offsetLeft - e.clientX;
+  dragging.offset.top = e.target.offsetTop - e.clientY;
 }
 
-function dragEnd(e) {
+export function dragEnd(e) {
   dragging.isDragged = false;
   tableCells.forEach((el) => checkIntersection(el, dragging.target));
   dragging.overlapFound = false;
@@ -95,7 +67,7 @@ function dragEnd(e) {
   }
 }
 
-function onDrag(e) {
+export function onDrag(e) {
   e.preventDefault();
   if (dragging.isDragged) {
     dragging.positionOfMouse.x = e.clientX;
@@ -118,8 +90,8 @@ function switchSign(e) {
 
 function checkIntersection(targetEl, draggedEl) {
   if (!dragging.overlapFound) {
-    let targetElCoords = targetEl.getBoundingClientRect();
-    let draggedElCoords = draggedEl.getBoundingClientRect();
+    targetElCoords = targetEl.getBoundingClientRect();
+    draggedElCoords = draggedEl.getBoundingClientRect();
 
     let overlap = !(
       targetElCoords.right < draggedElCoords.left ||
@@ -201,15 +173,3 @@ function checkWinner() {
     gameTable.classList.add("game-inactive");
   }
 }
-
-img0.addEventListener("mousedown", dragStart.bind(img0));
-img1.addEventListener("mousedown", dragStart.bind(img1));
-
-img0.addEventListener("mouseup", dragEnd.bind(img0), true);
-img1.addEventListener("mouseup", dragEnd.bind(img1), true);
-
-document.addEventListener("mousemove", onDrag);
-
-startGameBtn.addEventListener("click", gameStart);
-
-gameStart();
