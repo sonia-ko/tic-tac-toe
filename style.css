@@ -28,7 +28,7 @@ h1 {
 }
 
 button {
-  padding: 2vw;
+  padding: 1.5vw;
   background-color: RGBA(254, 240, 255, 0.75);
   font-family: "Maven Pro", sans-serif;
   display: block;
@@ -43,7 +43,7 @@ button:hover {
 .buttons {
   display: flex;
   width: 40%;
-  justify-content: right;
+  justify-content: flex-end;
 }
 
 .start-game-btn {
