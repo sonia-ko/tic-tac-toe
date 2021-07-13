@@ -1,14 +1,16 @@
-export const img0 = document.querySelector(".x-image");
-export const img1 = document.querySelector(".o-image");
+////////DOM elements////////
+
+export const xImg = document.querySelector(".x-image");
+export const oImg = document.querySelector(".o-image");
 export const startGameBtn = document.querySelector(".start-game-btn");
 
 const tableCells = document.querySelectorAll("td");
-const gameArea = document.querySelector(".game-area");
 const gameTable = document.querySelector("table");
 const gameStateEl = document.querySelector(".state-paragraph");
 
+// an object holding the values related to the dragging functionality
 const dragging = {
-  target: img0,
+  targetEl: xImg,
   activeTarget: "X",
   isDragged: false,
   positionOfMouse: {
@@ -21,27 +23,31 @@ const dragging = {
   },
   overlapFound: false,
   elementSet: false,
-  leftIitial: "70%", //initial position of the dragged element
-  topImitial: "40%",
+  leftInitialPosition: "70%",
+  topInitialPosition: "40%",
 };
 
+//////// FUNCTIONS////////
+
+// Public functions
+
 export function gameStart() {
-  img1.classList.add("hidden");
-  img0.classList.remove("hidden");
-  gameStateEl.textContent = "Please move the X sign to start the game.";
+  oImg.classList.add("hidden");
+  xImg.classList.remove("hidden");
+  gameStateEl.textContent = "Please move the X sign to start the game";
   tableCells.forEach((el) => {
     el.classList.remove("cell-filled");
     el.innerHTML = "&nbsp;&nbsp;";
   });
   gameTable.classList.remove("game-inactive");
-  dragging.isDragged = false;
-  dragging.target = img0;
+  dragging.targetEl = xImg;
   dragging.activeTarget = "X";
+  dragging.isDragged = false;
 }
 
 export function dragStart(e) {
   if (dragging.isDragged) return;
-  if (e.target !== dragging.target) return;
+  if (e.target !== dragging.targetEl) return;
   dragging.isDragged = true;
   dragging.offset.left = e.target.offsetLeft - e.clientX;
   dragging.offset.top = e.target.offsetTop - e.clientY;
@@ -49,21 +55,22 @@ export function dragStart(e) {
 
 export function dragEnd(e) {
   dragging.isDragged = false;
-  tableCells.forEach((el) => checkIntersection(el, dragging.target));
+  tableCells.forEach((el) => checkIntersection(el, dragging.targetEl));
   dragging.overlapFound = false;
-
   // moves the image back to the initial position
-  e.target.style.left = `${dragging.leftIitial}`;
-  e.target.style.top = `${dragging.topImitial}`;
+  e.target.style.left = `${dragging.leftInitialPosition}`;
+  e.target.style.top = `${dragging.topInitialPosition}`;
+  // switch the image shown in the UI
   if (dragging.elementSet) {
-    img1.classList.toggle("hidden");
-    img0.classList.toggle("hidden");
+    e.target.classList.remove("image-dragged");
+    oImg.classList.toggle("hidden");
+    xImg.classList.toggle("hidden");
     // updates the state paragraph
     gameStateEl.textContent = `Please move the ${
       dragging.activeTarget === "X" ? "O" : "X"
-    }.`;
+    } to proceed with the game `;
     checkWinner();
-    switchSign(e);
+    switchDraggingTarget(e);
   }
 }
 
@@ -80,9 +87,11 @@ export function onDrag(e) {
   }
 }
 
-function switchSign(e) {
+// Private functions
+
+function switchDraggingTarget(e) {
   // switches the target image element
-  dragging.target = dragging.target === img0 ? img1 : img0;
+  dragging.targetEl = dragging.targetEl === xImg ? oImg : xImg;
   // switches the target image object
   dragging.activeTarget = dragging.activeTarget === "X" ? "O" : "X";
   dragging.elementSet = false;
@@ -90,8 +99,8 @@ function switchSign(e) {
 
 function checkIntersection(targetEl, draggedEl) {
   if (!dragging.overlapFound) {
-    targetElCoords = targetEl.getBoundingClientRect();
-    draggedElCoords = draggedEl.getBoundingClientRect();
+    let targetElCoords = targetEl.getBoundingClientRect();
+    let draggedElCoords = draggedEl.getBoundingClientRect();
 
     let overlap = !(
       targetElCoords.right < draggedElCoords.left ||
@@ -153,7 +162,7 @@ function checkWinner() {
   let allCellsFilled = cellsFilled.every((el) => el === true);
 
   if (finalWinner) {
-    gameStateEl.textContent = `${dragging.target.dataset.gameValue} is a winner   🏆🥇😉. To start a new game, click on the Start game button 🎉`;
+    gameStateEl.textContent = `${dragging.targetEl.dataset.gameValue} is a winner   🏆🥇😉. To start a new game, click on the Start game button 🎉`;
     hideImages();
     gameTableFading();
   }
@@ -165,8 +174,8 @@ function checkWinner() {
   }
 
   function hideImages() {
-    img0.classList.add("hidden");
-    img1.classList.add("hidden");
+    xImg.classList.add("hidden");
+    oImg.classList.add("hidden");
   }
 
   function gameTableFading() {
